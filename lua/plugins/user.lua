@@ -1,18 +1,10 @@
--- You can also add or configure plugins by creating files in this `plugins/` folder
--- PLEASE REMOVE THE EXAMPLES YOU HAVE NO INTEREST IN BEFORE ENABLING THIS FILE
--- Here are some examples:
+-- User plugins and overrides for DiwVim
 
 ---@type LazySpec
 return {
 
-  -- == Examples of Adding Plugins ==
+  -- == Colorscheme ==
 
-  "andweeb/presence.nvim",
-  -- {
-  --   "ray-x/lsp_signature.nvim",
-  --   event = "BufRead",
-  --   config = function() require("lsp_signature").setup() end,
-  -- },
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -33,73 +25,70 @@ return {
     end,
   },
 
-  -- == Examples of Overriding Plugins ==
+  -- == Dashboard ==
 
-  -- customize dashboard options
   {
     "folke/snacks.nvim",
     opts = {
       dashboard = {
         preset = {
           header = table.concat({
-            " █████  ███████ ████████ ██████   ██████ ",
-            "██   ██ ██         ██    ██   ██ ██    ██",
-            "███████ ███████    ██    ██████  ██    ██",
-            "██   ██      ██    ██    ██   ██ ██    ██",
-            "██   ██ ███████    ██    ██   ██  ██████ ",
-            "",
-            "███    ██ ██    ██ ██ ███    ███",
-            "████   ██ ██    ██ ██ ████  ████",
-            "██ ██  ██ ██    ██ ██ ██ ████ ██",
-            "██  ██ ██  ██  ██  ██ ██  ██  ██",
-            "██   ████   ████   ██ ██      ██",
+            "██████  ██ ██     ██ ██    ██ ██ ███    ███",
+            "██   ██ ██ ██     ██ ██    ██ ██ ████  ████",
+            "██   ██ ██ ██  █  ██ ██    ██ ██ ██ ████ ██",
+            "██   ██ ██ ██ ███ ██  ██  ██  ██ ██  ██  ██",
+            "██████  ██  ███ ███    ████   ██ ██      ██",
           }, "\n"),
         },
       },
     },
   },
 
-  -- You can disable default plugins as follows:
+  -- == Language extras ==
+
+  -- translate cryptic TypeScript errors into plain English
+  {
+    "dmmulroy/ts-error-translator.nvim",
+    ft = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+    opts = {},
+  },
+
+  -- == Claude Code integration ==
+
+  {
+    "coder/claudecode.nvim",
+    dependencies = { "folke/snacks.nvim" },
+    opts = {},
+    keys = {
+      { "<Leader>a", nil, desc = "AI/Claude Code" },
+      { "<Leader>ac", "<cmd>ClaudeCode<CR>", desc = "Toggle Claude" },
+      { "<Leader>af", "<cmd>ClaudeCodeFocus<CR>", desc = "Focus Claude" },
+      { "<Leader>ar", "<cmd>ClaudeCode --resume<CR>", desc = "Resume Claude" },
+      { "<Leader>aC", "<cmd>ClaudeCode --continue<CR>", desc = "Continue Claude" },
+      { "<Leader>ab", "<cmd>ClaudeCodeAdd %<CR>", desc = "Add current buffer" },
+      { "<Leader>as", "<cmd>ClaudeCodeSend<CR>", mode = "v", desc = "Send selection to Claude" },
+      {
+        "<Leader>as",
+        "<cmd>ClaudeCodeTreeAdd<CR>",
+        desc = "Add file from tree",
+        ft = { "neo-tree", "oil" },
+      },
+      { "<Leader>aa", "<cmd>ClaudeCodeDiffAccept<CR>", desc = "Accept diff" },
+      { "<Leader>ad", "<cmd>ClaudeCodeDiffDeny<CR>", desc = "Deny diff" },
+    },
+  },
+
+  -- == Plugin overrides ==
+
+  -- disable rolling j/k escape mapping
   { "max397574/better-escape.nvim", enabled = false },
 
-  -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
     "L3MON4D3/LuaSnip",
     config = function(plugin, opts)
       require "astronvim.plugins.configs.luasnip"(plugin, opts) -- include the default astronvim config that calls the setup call
-      -- add more custom luasnip configuration such as filetype extend or custom snippets
       local luasnip = require "luasnip"
       luasnip.filetype_extend("javascript", { "javascriptreact" })
-    end,
-  },
-
-  {
-    "windwp/nvim-autopairs",
-    config = function(plugin, opts)
-      require "astronvim.plugins.configs.nvim-autopairs"(plugin, opts) -- include the default astronvim config that calls the setup call
-      -- add more custom autopairs configuration such as custom rules
-      local npairs = require "nvim-autopairs"
-      local Rule = require "nvim-autopairs.rule"
-      local cond = require "nvim-autopairs.conds"
-      npairs.add_rules(
-        {
-          Rule("$", "$", { "tex", "latex" })
-            -- don't add a pair if the next character is %
-            :with_pair(cond.not_after_regex "%%")
-            -- don't add a pair if  the previous character is xxx
-            :with_pair(
-              cond.not_before_regex("xxx", 3)
-            )
-            -- don't move right when repeat character
-            :with_move(cond.none())
-            -- don't delete if the next character is xx
-            :with_del(cond.not_after_regex "xx")
-            -- disable adding a newline when you press <cr>
-            :with_cr(cond.none()),
-        },
-        -- disable for .vim files, but it work for another filetypes
-        Rule("a", "a", "-vim")
-      )
     end,
   },
 }
