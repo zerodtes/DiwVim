@@ -16,6 +16,7 @@ A customized [AstroNvim](https://github.com/AstroNvim/AstroNvim) configuration.
 - **TypeScript error translation** — [ts-error-translator.nvim](https://github.com/dmmulroy/ts-error-translator.nvim)
 - **Discord rich presence** — [cord.nvim](https://github.com/vyfor/cord.nvim)
 - **Theme** — [tokyonight](https://github.com/folke/tokyonight.nvim) (night style)
+- **Custom statusline** — rounded separators, word count in prose files, and a live Claude Code connection indicator
 - Format on save (configured in `lua/plugins/astrolsp.lua`)
 
 ## 🔧 Requirements
